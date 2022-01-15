@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          Int       @id @unique  @default(autoincrement())
+  name        String    @db.VarChar
+  description String?   @db.VarChar
+  createdAt   DateTime  @default(now()) @map("created_at")
+  products    Product[]
+  @@map("categories")
+}
+
+model Product {
+  id                Int                @id @unique  @default(autoincrement())
+  name              String             @db.VarChar
+  description       String?            @db.VarChar
+  price             Decimal            @db.Decimal
+  categoryId        Int                @map("category_id")
+  stock             Int                @default(0)
+  imageUrl          String?            @map("image_url") @db.VarChar
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @default(now()) @map("updated_at")
+  categories        Category           @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "products_categories_id_fkey")
+  shoppingCartItems ShoppingCartItem[]
+  @@map("products")
+}
+
+model ShoppingCartItem {
+  id            Int          @id @unique  @default(autoincrement())
+  cartId        Int          @map("cart_id")
+  productId     Int          @map("product_id")
+  amount        Int          @default(0)
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @default(now()) @map("updated_at")
+  shoppingCarts ShoppingCart @relation(fields: [cartId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "shopping_cart_items_carts_id_fkey")
+  products      Product      @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "shopping_cart_items_products_id_fkey")
+  @@unique([cartId, productId])
+  @@map("shopping_cart_items")
+}
+
+model ShoppingCart {
+  id                Int                @id @unique  @default(autoincrement())
+  userId            Int                @map("user_id")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @default(now()) @map("updated_at")
+  users             User               @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "shopping_carts_users_id_fkey")
+  shoppingCartItems ShoppingCartItem[]
+  @@map("shopping_carts")
+}
+
+model User {
+  id            Int            @id @unique @default(autoincrement())
+  email         String         @unique @db.VarChar
+  password      String         @db.VarChar
+  firstName     String         @map("first_name") @db.VarChar
+  lastName      String         @map("last_name") @db.VarChar
+  createdAt     DateTime       @default(now()) @map("created_at")
+  isPublicEmail Boolean        @default(true) @map("is_public_email")
+  isVerified    Boolean        @default(false) @map("is_verified")
+  role          RoleType       @default(client)
+  shoppingCarts ShoppingCart[]
+  @@map("users")
+}
+
+enum RoleType {
+  client   @map("client")
+  manager  @map("manager")
+  admin    @map("admin")
+  @@map("role_type")
+}
