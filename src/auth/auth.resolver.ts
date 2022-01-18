@@ -19,7 +19,10 @@ export class AuthResolver {
   }
 
   @Mutation(() => User)
-  signUp(@Args('SignUpAuthInput') createUserInput: CreateUserInput) {
+  async signUp(@Args('SignUpInput') createUserInput: CreateUserInput) {
+    createUserInput.password = await this.authService.hashPassword(
+      createUserInput.password,
+    );
     return this.usersService.create(createUserInput);
   }
 }
