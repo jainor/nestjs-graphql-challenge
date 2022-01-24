@@ -7,6 +7,8 @@ import { UpdateUserInput } from './dto/update-user.input';
 
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import { GqlAuthGuard } from 'src/auth/guards/auth-guard';
+import { Roles } from 'src/auth/decorators/rol.decorator';
+import { RolesGuard } from 'src/auth/decorators/rol-guard.decorator';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -18,6 +20,9 @@ export class UsersResolver {
   }
 
   @Query(() => [User], { name: 'users' })
+  @UseGuards(GqlAuthGuard)
+  @Roles('admin')
+  @UseGuards(GqlAuthGuard, RolesGuard)
   findAll() {
     return this.usersService.findAll();
   }
@@ -29,6 +34,8 @@ export class UsersResolver {
 
   @Query(() => User)
   @UseGuards(GqlAuthGuard)
+  @Roles('admin', 'manager', 'client')
+  @UseGuards(GqlAuthGuard, RolesGuard)
   findMe(@GetUser() user) {
     return this.usersService.findOneByEmail(user.email);
   }
