@@ -13,6 +13,7 @@ import { CartItemsModule } from './cart-items/cart-items.module';
     GraphQLModule.forRoot({
       autoSchemaFile: 'schema.gql',
       context: ({ req }) => ({ req }),
+      playground: true,
     }),
     CategoriesModule,
     PrismaModule,
