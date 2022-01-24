@@ -17,13 +17,4 @@ export class CreateUserInput {
 
   @Field()
   lastName: string;
-
-  @Field()
-  isPublicEmail: boolean;
-
-  @Field()
-  isVerifiedEmail: boolean;
-
-  @Field(() => RoleType)
-  role: RoleType;
 }
