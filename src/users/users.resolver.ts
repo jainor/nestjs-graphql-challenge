@@ -34,8 +34,12 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    return this.usersService.update(updateUserInput.id, updateUserInput);
+  @UseGuards(GqlAuthGuard)
+  updateUser(
+    @GetUser() user,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+  ) {
+    return this.usersService.update(user.id, updateUserInput);
   }
 
   @Mutation(() => User)
