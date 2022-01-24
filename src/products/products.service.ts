@@ -11,8 +11,11 @@ export class ProductsService {
     return this.prisma.product.create({ data: createProductInput });
   }
 
-  findAll() {
-    return this.prisma.product.findMany();
+  findAll(page: number, perPage: number) {
+    return this.prisma.product.findMany({
+      skip: (page - 1) * perPage,
+      take: perPage,
+    });
   }
 
   findOne(id: number) {

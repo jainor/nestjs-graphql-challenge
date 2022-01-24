@@ -3,6 +3,7 @@ import { ProductsService } from './products.service';
 import { Product } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
+import { Pagination } from '../pagination/dto/pagination.input';
 
 @Resolver(() => Product)
 export class ProductsResolver {
@@ -16,8 +17,9 @@ export class ProductsResolver {
   }
 
   @Query(() => [Product], { name: 'products' })
-  findAll() {
-    return this.productsService.findAll();
+  findAll(@Args('pagination', { nullable: true }) pagination: Pagination) {
+    const { page, perPage } = pagination;
+    return this.productsService.findAll(page, perPage);
   }
 
   @Query(() => Product, { name: 'product' })
