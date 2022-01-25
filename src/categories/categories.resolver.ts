@@ -29,6 +29,7 @@ export class CategoriesResolver {
   updateCategory(
     @Args('updateCategoryInput') updateCategoryInput: UpdateCategoryInput,
   ) {
+    console.log(updateCategoryInput);
     return this.categoriesService.update(
       updateCategoryInput.id,
       updateCategoryInput,

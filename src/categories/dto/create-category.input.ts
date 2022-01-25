@@ -5,10 +5,6 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateCategoryInput {
   @Field()
   @IsNotEmpty()
-  id: number;
-
-  @Field()
-  @IsNotEmpty()
   name: string;
 
   @Field({ nullable: true })

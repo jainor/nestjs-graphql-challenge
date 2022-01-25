@@ -5,7 +5,7 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateCartItemInput {
   @Field(() => Int)
   @IsNotEmpty()
-  id: number;
+  cartId: number;
 
   @Field()
   @IsNotEmpty()

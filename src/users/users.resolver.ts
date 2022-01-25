@@ -33,7 +33,6 @@ export class UsersResolver {
   }
 
   @Query(() => User)
-  @UseGuards(GqlAuthGuard)
   @Roles('admin', 'manager', 'client')
   @UseGuards(GqlAuthGuard, RolesGuard)
   findMe(@GetUser() user) {

@@ -12,10 +12,12 @@ export class CartItemsResolver {
   constructor(private readonly cartItemsService: CartItemsService) {}
 
   @Mutation(() => CartItem)
+  @UseGuards(GqlAuthGuard)
   createCartItem(
+    @GetUser() user,
     @Args('createCartItemInput') createCartItemInput: CreateCartItemInput,
   ) {
-    return this.cartItemsService.create(0, createCartItemInput);
+    return this.cartItemsService.create(user.id, createCartItemInput);
   }
 
   @Query(() => [CartItem], { name: 'cartItems' })
@@ -31,7 +33,9 @@ export class CartItemsResolver {
   }
 
   @Mutation(() => CartItem)
+  @UseGuards(GqlAuthGuard)
   updateCartItem(
+    @GetUser() user,
     @Args('updateCartItemInput') updateCartItemInput: UpdateCartItemInput,
   ) {
     return this.cartItemsService.update(

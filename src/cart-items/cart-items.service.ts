@@ -10,11 +10,6 @@ export class CartItemsService {
 
   async create(userId: number, createCartItemInput: CreateCartItemInput) {
     const cartId = userId;
-    const { id } = createCartItemInput;
-
-    if (await this.prisma.shoppingCartItem.count({ where: { id } })) {
-      throw new HttpException('id already used', HttpStatus.BAD_REQUEST);
-    }
 
     return this.prisma.shoppingCartItem.create({
       data: {
